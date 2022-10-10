@@ -1,18 +1,11 @@
 import tkinter as tk
-import c31Geometry2 as c31
+from c31Geometry2 import *
 
-#Initialization
-root = tk.Tk()
-root.config(background="white")
-root.geometry("450x450")
-canvas = tk.Canvas(root, background='white')
+class VueCarreRouge():
+    def __init__(self, root) :
+        self.root = root
+        self.canvas = tk.Canvas(root, background='white')
+        self.carreRouge = Carre(self.canvas, Vecteur(225, 225), 50, remplissage= 'red', bordure= 'black', epaisseur= 1)
 
-#Titre
-root.title("Carre Rouge")
-
-#Affichage Carre Rouge position 225 x 225
-carreRouge = c31.Carre(canvas, c31.Vecteur(225, 225), 50, remplissage= 'red')
-carreRouge.draw()
-canvas.grid()
-
-root.mainloop()
+    def dessiner(self) :
+        self.carreRouge.draw()

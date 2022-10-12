@@ -296,6 +296,9 @@ class Vecteur:
             return False
         
         return self.x != other.x or self.y != other.y
+    
+    def __str__(self):
+        return "{" + self.x + "; " + self.y + "}"
 
 class Rotation:
     """Classe représentant une rotation matriciel utilisable sur les vecteurs de la bibliothèque
@@ -574,6 +577,25 @@ class Polygone:
         if not isinstance(position, Vecteur) :
             raise TypeError("Le paramètre doit être de type Vecteur")
         self.origine = position
+        
+    def get_origine(self) -> Vecteur:
+        """Permet de récupérer l'origine du polygone
+
+        Returns:
+            Vecteur: Origine du polygone
+        """
+        return self.origine
+    
+    def translateTo(self, position:Vecteur) -> None:
+        """_summary_
+
+        Args:
+            position (Vecteur): Position où déplacer le polygone
+
+        Raises:
+            TypeError: Le paramètre doit être de type Vecteur
+        """
+        self.translate(position - self.origine)
                     
 class Ligne(Polygone):
     """Représente une ligne (hérite de Polygone)

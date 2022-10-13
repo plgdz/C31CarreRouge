@@ -23,22 +23,43 @@ class VueJeu():
         self.canvas.pack()
 
 
-class VueClassement :     # En construction 
+class VueClassement :     # En construction  ----------------------------
     def __init__(self, root):
         self.root = root 
-        self.canvas = tk.Canvas(root, background="red", width=700, height=700)
-        self.carreBackground = Carre(self.canvas, Vecteur(350, 350), 450, 0, remplissage="lightpink", bordure="black", epaisseur=0)
+        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+        self.carreBackground = Carre(self.canvas, Vecteur(350, 350), 500, 0, remplissage="white", bordure="black", epaisseur=0)
+    
+        #Afficher le titre du classement 
+        titre = tk.Label(root, text="Classement")
+        titre.config(font =("Lucida Console", 25), background="lightgrey")
+        titre.place(anchor=tk.CENTER, relx = .5, rely = .1)
+        
+        
+        #Afficher boîte dans laquelle sont les scores 
+        donnees = tk.Listbox(root, height = 30, width = 80)
+        donnees.place(anchor=tk.CENTER, relx = .5, rely = .5)
+
+        #Afficher le scrollbar de la boîte 
+        scrollbar = tk.Scrollbar(donnees, orient=tk.VERTICAL)
+        donnees.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=donnees.yview)
+
+        #Afficher les données du CSV dans la boîte 
+        with open('fichierHighScore.csv') as fichiercsv: 
+            reader = csv.reader(fichiercsv)
+            for row in reader:
+                donnees.insert(tk.END, str(row))
+ 
+
 
     def dessinerClassement(self, root):
         self.carreBackground.draw()
         self.canvas.pack()
         counter = 0;  
- 
-        #Afficher les données du CSV 
-        with open('fichierHighScore.csv') as fichiercsv: 
-            reader = csv.reader(fichiercsv)
-            for row in reader:
-                counter +=1
-                print(str(counter) + ".\t" + '\t'.join(row))
-        time.sleep(5.0)
+        # with open('fichierHighScore.csv') as fichiercsv: 
+        #    reader = csv.reader(fichiercsv)
+        #    for row in reader:
+        #        counter +=1
+        #        print(str(counter) + ".\t" + '\t'.join(row))
+        #time.sleep(5.0)
   

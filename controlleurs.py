@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 import csv 
 from datetime import datetime
-from vues import VueClassement, VueJeu
+from vues import *
 import tkinter as tk
 
 
@@ -17,10 +17,12 @@ class JeuControler :
 
 class ClassementControler:
     def __init__(self, root, vues) :
-        self.vues = VueClassement(root)
+        self.vues = VueClassement(root, self.fncSupprimerScore(self))
+   
 
     def start(self, root) :
         self.vues.dessinerClassement(root)    
+
 
     def ecrireScore(self, nom, secondes):   
         secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
@@ -28,6 +30,7 @@ class ClassementControler:
         with open('fichierHighScore.csv', 'a', newline="") as csv_file:  #Ouvrir le fichier en "append" pour ajouter donnée
             writer = csv.writer(csv_file, delimiter=',')              
             writer.writerows(zip([nom], [secondes], [date]))             #Écrire le nom, nb de secondes et date dans le CSV
+
 
     def trierClassement(self, nom, secondes): 
         ClassementControler.ecrireScore(self, nom, secondes) 
@@ -41,5 +44,8 @@ class ClassementControler:
         write = csv.writer(sorted_csv_file)           
         for eachline in data:
                 write.writerow(eachline)  
-        
 
+
+    def fncSupprimerScore(self, ligne):
+        print("En Construction") 
+        #with open('fichierHighScore.csv', 'r') as csv_file: 

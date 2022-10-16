@@ -1,9 +1,12 @@
 
 # -*- coding: utf8 -*-
-import csv 
+import csv
+import os  
 from datetime import datetime
 from vues import *
 import tkinter as tk
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 
 class JeuControler :
@@ -17,8 +20,8 @@ class JeuControler :
 
 class ClassementControler:
     def __init__(self, root, vues) :
-        self.vues = VueClassement(root, self.fncSupprimerScore(self))
-   
+        self.vues = VueClassement(root, self.supprimerScore)
+        
 
     def start(self, root) :
         self.vues.dessinerClassement(root)    
@@ -32,7 +35,7 @@ class ClassementControler:
             writer.writerows(zip([nom], [secondes], [date]))             #Écrire le nom, nb de secondes et date dans le CSV
 
 
-    def trierClassement(self, nom, secondes): 
+    def ajouterAuClassement(self, nom, secondes): 
         ClassementControler.ecrireScore(self, nom, secondes) 
 
         # Ouvrir le fichier CSV et le trier par le nombre de secondes des joueurs en ordre décroissant 
@@ -46,6 +49,22 @@ class ClassementControler:
                 write.writerow(eachline)  
 
 
-    def fncSupprimerScore(self, ligne):
-        print("En Construction") 
-        #with open('fichierHighScore.csv', 'r') as csv_file: 
+    def supprimerScore(self, index):
+        ligneASupprimer = (index + 1) 
+        ligne = 0
+        filepath = Path('fichierHighScore.csv')
+        with open(filepath, 'r', newline='') as csv_file, \
+            NamedTemporaryFile('w', newline='', dir=filepath.parent, delete=False) as tmp_file:
+            
+            csv_reader = csv.reader(csv_file)
+            csv_writer = csv.writer(tmp_file)
+
+            # Copier les lignes du CSV sans copier la rangée que l'utilisateur veut supprimer 
+            for row in csv_reader:
+                ligne += 1 
+                if ligne == ligneASupprimer:  
+                    continue  
+                csv_writer.writerow(row)
+
+        # Remplacer le fichier csv existant par le nouveau avec la ligne supprimée  
+        os.replace(tmp_file.name, filepath)

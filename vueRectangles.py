@@ -3,23 +3,27 @@ from c31Geometry2 import *
 
 class VueRectangles(tk.Frame):
     def __init__(self, root, difficulte) :
-        #Creation du canvas 
+        
+        #CREATION DU CANVAS 
+        
         self.root = root
         self.canvas = tk.Canvas(root, background='white', width= 450, height= 450)
         self.vitesse = 0
         self.difficulte = difficulte
 
-        #Choix difficultee
+        #CHOIX DIFFICULTE
+        
         if(self.difficulte == "facile"):
             self.vitesse = 1
-        elif(self.difficulte == "intermediere"):
+        elif(self.difficulte == "moyen"):
             self.vitesse = 3
         elif(self.difficulte == "difficile"):
             self.vitesse = 5
         elif(self.difficulte == "progressif"):
             self.vitesse = 1
 
-        #Creation des rectangles, de la vitesse et de la direction initiale
+        #CREATION DES RECTANGLES
+        
         self.rectangleBleuSupDroit = Rectangle(self.canvas, Vecteur(300, 85), 60, 50, remplissage= 'blue', bordure= 'black', epaisseur= 1) 
         self.x1 = -self.vitesse
         self.y1 = self.vitesse
@@ -145,19 +149,3 @@ class VueRectangles(tk.Frame):
         self.rectangleBleuInfGauche.draw()
         self.rectangleBleuInfDroit.draw()
         self.canvas.grid()
-
-#MAIN
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.geometry( "450x450" )
-    difficulte = "difficile"
-    affichage = VueRectangles(root, difficulte)
-    affichage.dessiner()
-    affichage._moveRectangleBleuGauche()
-    affichage._moveRectangleBleuInfDroit()
-    affichage._moveRectangleBleuInfGauche()
-    affichage._moveRectangleBleuSupDroit()
-    affichage.loop()
-    affichage.loopStart()
-    root.mainloop()

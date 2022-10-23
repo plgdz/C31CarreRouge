@@ -1,31 +1,35 @@
-
-# -*- coding: utf8 -*-
+from asyncio.windows_events import NULL
 import csv
 import os  
 from datetime import datetime
-from vues import *
+from vues import VueClassement, VueMenu, VueJeu
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 
 class JeuControler :
-    def __init__(self, root, vues) :
-        self.vues = VueJeu(root)
+    def __init__(self, root, difficulte) :
+        self.vues = VueJeu(root, difficulte)   
 
-    def start(self, root) :
-        self.vues.dessinerAireJeu(root)    
+class MenuControler :
+    def __init__(self, root):  
+        self.difficulte = -1
+        classement = ClassementControler(root)
+        
+        self.jeu = tk.Frame(root, height=700, width=700)
+        self.menu = tk.Frame(root, width=700, height=700)
+        self.vueMenu = VueMenu(self.menu, classement.__getMenuClassement__())
 
-
-
-class ClassementControler:
-    def __init__(self, root, vues) :
-        self.vues = VueClassement(root, self.supprimerScore)
+        self.menu.grid(column=0, row=0)
         
 
-    def start(self, root) :
-        self.vues.dessinerClassement(root)    
+class ClassementControler:
+    def __init__(self, root) :
+        self.vues = VueClassement(root, self.supprimerScore)
 
+    def __getMenuClassement__(self):
+        return self.vues.canvas   
 
     def ecrireScore(self, nom, secondes):   
         secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
@@ -68,3 +72,12 @@ class ClassementControler:
 
         # Remplacer le fichier csv existant par le nouveau avec la ligne supprimée  
         os.replace(tmp_file.name, filepath)
+
+# if __name__ == "__main__" :
+#     root = tk.Tk()
+#     root.title("Jeu du Carré Rouge")  
+#     root.geometry("700x700")  
+
+#     MenuControler(root)
+
+#     root.mainloop()

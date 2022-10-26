@@ -6,39 +6,43 @@ from c31Geometry2 import *
 
 
 class VueRegisterSession(): 
+    inputNom= None   # Variable globale 
+
     def __init__(self, root) :
         self.root = root
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
-        
-        #Afficher le titre 
-        enregistrer = tk.Label(root, text="Enregistrer la session?")
-        enregistrer.config(font =("Lucida Console", 20), background="lightgrey", foreground="red")
-        enregistrer.place(anchor=tk.CENTER, relx = .5, rely = .4)
 
-        #Créer les boutons oui et non 
+        #Configurer le titre 
+        self.titre = tk.Label(root, text="Enregistrer la session?")
+        self.titre.config(font =("Lucida Console", 22), background="lightgrey", foreground="red")
+
+        #Configurer les boutons oui et non 
         self.buttonOui = tk.Button(root, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root)])
         self.buttonNon = tk.Button(root, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5)
         
 
     def afficherInputNom(self, root):
-        #Si le joueur appuie sur "oui", afficher option pour input du score 
+        #Si le joueur appuie sur "oui", afficher option pour input du nom
         self.prenom = tk.Label(root, text="Entrez votre prénom : ")
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
+
         self.textBox=tk.Text(height=1, width=20)
+        self.textBox.bind('<KeyPress-Return>', partial(self.retrieveInput))   # ------- Ajouter la fonction pour rediriger vers le classemebnt  --------- #
+
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
+        
 
+    def retrieveInput(self, root):
+        #Obtenir la valeur de l'entrée du nom du joueur 
+        inputNom=self.textBox.get("1.0","end-1c")  
+        print(inputNom)
 
     def dessinerRegisterSession(self, root) :
         self.canvas.pack()
-
-        self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.55)
-        self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.55)
-
-        #self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
-        #self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
-
-
+        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
+        self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.5)
+        self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.5)
 
 
 class VueJeu():

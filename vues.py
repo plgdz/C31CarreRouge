@@ -9,18 +9,34 @@ class VueRegisterSession():
     def __init__(self, root) :
         self.root = root
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+        
+        #Afficher le titre 
         enregistrer = tk.Label(root, text="Enregistrer la session?")
         enregistrer.config(font =("Lucida Console", 20), background="lightgrey", foreground="red")
         enregistrer.place(anchor=tk.CENTER, relx = .5, rely = .4)
 
-        #tree.bind('<ButtonRelease-1>', partial(self.envoyerChoix, tree)) 
-        self.buttonOui = tk.Button(root, text="Oui", width=12, height=2, background="Green", foreground="white", borderwidth=5)
-        self.buttonNon = tk.Button(root, text="Non", width=12, height=2, background="Red", foreground="white", borderwidth=5)
+        #Créer les boutons oui et non 
+        self.buttonOui = tk.Button(root, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root)])
+        self.buttonNon = tk.Button(root, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5)
+        
+
+    def afficherInputNom(self, root):
+        #Si le joueur appuie sur "oui", afficher option pour input du score 
+        self.prenom = tk.Label(root, text="Entrez votre prénom : ")
+        self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
+        self.textBox=tk.Text(height=1, width=20)
+        self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
+        self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
+
 
     def dessinerRegisterSession(self, root) :
         self.canvas.pack()
+
         self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.55)
         self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.55)
+
+        #self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
+        #self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
 
 
 

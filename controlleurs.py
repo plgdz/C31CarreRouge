@@ -17,6 +17,14 @@ class JeuControler :
         self.vues.dessinerAireJeu(root)    
 
 
+class RegisterSessionControler:
+    def __init__(self, root, vues) :
+        self.vues = VueRegisterSession(root)
+
+    def start(self, root) :
+        self.vues.dessinerRegisterSession(root)
+
+
 
 class ClassementControler:
     def __init__(self, root, vues) :

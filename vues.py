@@ -5,6 +5,26 @@ from tkinter.ttk import *
 from c31Geometry2 import *
 
 
+class VueRegisterSession(): 
+    def __init__(self, root) :
+        self.root = root
+        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+        enregistrer = tk.Label(root, text="Enregistrer la session?")
+        enregistrer.config(font =("Lucida Console", 20), background="lightgrey", foreground="red")
+        enregistrer.place(anchor=tk.CENTER, relx = .5, rely = .4)
+
+        #tree.bind('<ButtonRelease-1>', partial(self.envoyerChoix, tree)) 
+        self.buttonOui = tk.Button(root, text="Oui", width=12, height=2, background="Green", foreground="white", borderwidth=5)
+        self.buttonNon = tk.Button(root, text="Non", width=12, height=2, background="Red", foreground="white", borderwidth=5)
+
+    def dessinerRegisterSession(self, root) :
+        self.canvas.pack()
+        self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.55)
+        self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.55)
+
+
+
+
 class VueJeu():
     def __init__(self, root) :
         self.root = root

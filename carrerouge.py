@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from controlleurs import ClassementControler, JeuControler
+from controlleurs import ClassementControler, JeuControler, RegisterSessionControler
 import tkinter as tk
 import random
 from vues import VueClassement
@@ -14,8 +14,11 @@ if __name__ == "__main__" :
     #frameClassement = tk.Frame(root)
     #frameClassement.pack()
 
-    classement = ClassementControler(root, None)
-    classement.start(root)
+    #classement = ClassementControler(root, None)
+    #classement.start(root)
+
+    gameover = RegisterSessionControler(root, None)
+    gameover.start(root)
 
     #jeu = JeuControler(root, None)
     #jeu.start(root)

@@ -14,6 +14,7 @@ class VueMenu() :
         # Assigne les template de menu a leurs frames
         
         self.menuClassement = classement
+        self.retour(self.menuClassement)
         self.menuDiff = self.menuNiveaux(root)
         self.menu = self.menuMain(root) 
 
@@ -27,10 +28,18 @@ class VueMenu() :
         titre.place(relx=0.5, rely=0.15, anchor=tk.CENTER)  # placement dans le frame
 
     # Bouton Quitter commun au deux menu
-    def quit(self, frame):
-        quit = tk.Button(frame, text='Quitter')             # Creation du bouton
+    def quit(self, frame, root):
+        quit = tk.Button(frame, text='Quitter', command=root.quit)             # Creation du bouton
         quit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)    # Placement en bas au centre du frame
         quit.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
+
+    def retour(self, frame):
+        retour = tk.Button(frame, text='Retour', command=partial(self.retourMain, frame))             # Creation du bouton
+        retour.place(relx=0.1, rely=0.1, anchor=tk.CENTER)    # Placement en bas au centre du frame
+        retour.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
+
+    def retourMain(self, frame):
+        frame.grid_forget() # Permet de masquer le frame pour revenir au menu principal
 
     def menuNiveaux(self, root):
         menuNiveaux = tk.Frame(root, width=700, height=700) # Definition du frame
@@ -47,17 +56,19 @@ class VueMenu() :
         moyen.place(relx=0.3, rely=0.4)
         difficile.place(relx=0.5, rely=0.4)
         progressif.place(relx=0.7, rely=0.4)
-
-        self.quit(menuNiveaux)  # Affichage du boutons quit
+        self.retour(menuNiveaux)
+        self.quit(menuNiveaux, root)  # Affichage du boutons quit
 
         return menuNiveaux  # Retourne le frame du menu de choix de niveau
     
     # Methode pour afficher le menu de choix de niveau un fois le "Lancer une partie" active
     def choixNiveaux(self):
-        self.menuDiff.tkraise()
+        self.menuDiff.grid(column=0, row=0) # Replace le frame menu de niveau dans root
+        self.menuDiff.tkraise()             # Pousse le frame menu niveau au premier plan
 
     def showClassement(self):
-        self.menuClassement.tkraise()
+        self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
+        self.menuClassement.tkraise()               # Pousse le frame classement au premier plan
     
     def menuMain(self, root):
         menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal
@@ -72,7 +83,7 @@ class VueMenu() :
         score.place(relx=0.5, rely=0.55, anchor = tk.CENTER)        # Placement sur axe x et y
         score.config(height=3, width= 15, relief=tk.GROOVE)         # Définition de l'apparence
 
-        self.quit(menuMain)     # Appel de l'affichage du bouton quitter
+        self.quit(menuMain, root)     # Appel de l'affichage du bouton quitter
 
         return menuMain # Retourn le frame du menu principal
 

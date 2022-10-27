@@ -177,12 +177,12 @@ class VueClassement :
 
 class VueRectangles :
     def __init__(self, root, difficulte, canvas, carreRougeClicked) :
-        #Creation du canvas 
+        #Initialisation des données 
         self.root = root
         self.canvas = canvas
-        self.vitesse = 0
-        self.difficulte = difficulte
-        self.carreRougeClicked = carreRougeClicked
+        self.vitesse = 0 
+        self.difficulte = difficulte # Difficultée choisie par l'utilisateur
+        self.carreRougeClicked = carreRougeClicked # Valeur qui dicte quand les rectangles peuvent commencer à bouger
 
         #Choix difficultee
         if(self.difficulte == 0):
@@ -214,9 +214,11 @@ class VueRectangles :
         # Augmentation de la vitesse a chaque 5 seconde en mode progressif
         if(self.difficulte == 3):
             self.set_interval(self.addSpeed, 5)
-
+        
+        # Afficher les rectangles
         self.dessiner()
 
+        # Vérification de si le carré a été cliqué avant de commencer les mouvements
         if(self.carreRougeClicked):
             self.moveRectangles()
             self.loop()
@@ -228,13 +230,18 @@ class VueRectangles :
     def _moveRectangleBleuSupDroit(self) :
         position = self.rectangleBleuSupDroit.get_barycentre() 
 
+        # Si la position sur l'axe X arrive à l'extrémitée de l'aire du jeu, alors changement de direction. 
         if(position.x - 31 < 125 or position.x + 31 > 575) :
             self.x1 *= -1
 
+        # Si la position sur l'axe Y arrive à l'extrémitée de l'aire du jeu, alors changement de direction.
         elif(position.y + 26 > 575 or position.y - 26 < 125) :
             self.y1 *= -1
 
+        # Translation du rectangle selon la direction de celui-ci
         self.rectangleBleuSupDroit.translate(Vecteur(self.x1, self.y1)) 
+        
+        # Afficher le rectangle dans sa nouvelle position
         self.rectangleBleuSupDroit.draw()
 
 
@@ -301,7 +308,7 @@ class VueRectangles :
         self.rectangleBleuInfDroit.draw()
         self.canvas.grid()
 
-    # MOUVEMENT DES RECTANGLES
+    # DÉMARRER LE MOUVEMENT DES RECTANGLES
 
     def moveRectangles(self) :
         self._moveRectangleBleuGauche()
@@ -309,7 +316,7 @@ class VueRectangles :
         self._moveRectangleBleuInfGauche()
         self._moveRectangleBleuSupDroit()
 
-    # PROGRESSIF
+    # INTERVALLE DE TEMPS POUR AUGMENTER LA VITESSE PROGRESSIVEMENT
 
     def set_interval(self,func, sec):
         def func_wrapper():
@@ -319,6 +326,8 @@ class VueRectangles :
         t.start()
         return t
 
+    # AUGMENTE LA VITESSE DE CHAQUE RECTANGLE EXPONENTIELLEMENT
+    
     def addSpeed(self):
         self.x1 *= 1.25
         self.y1 *= 1.25

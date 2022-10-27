@@ -17,8 +17,8 @@ if __name__ == "__main__" :
     #classement = ClassementControler(root, None)
     #classement.start(root)
 
-    gameover = RegisterSessionControler(root, None)
-    gameover.start(root)
+    register = RegisterSessionControler(root, None)
+    register.start(root)
 
     #jeu = JeuControler(root, None)
     #jeu.start(root)

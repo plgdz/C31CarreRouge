@@ -19,7 +19,7 @@ class JeuControler :
 
 class RegisterSessionControler:
     def __init__(self, root, vues) :
-        self.vues = VueRegisterSession(root)
+        self.vues = VueEnregistrerSession(root, ClassementControler.ajouterAuClassement)
 
     def start(self, root) :
         self.vues.dessinerRegisterSession(root)
@@ -32,19 +32,15 @@ class ClassementControler:
         
 
     def start(self, root) :
-        self.vues.dessinerClassement(root)    
+        self.vues.dessinerClassement(root)     
+   
 
-
-    def ecrireScore(self, nom, secondes):   
+    def ajouterAuClassement(self, nom, secondes): 
         secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
         date = datetime.today().strftime('%Y-%m-%d')        # Enregistrer la date du jour 
         with open('fichierHighScore.csv', 'a', newline="") as csv_file:  #Ouvrir le fichier en "append" pour ajouter donnée
             writer = csv.writer(csv_file, delimiter=',')              
             writer.writerows(zip([nom], [secondes], [date]))             #Écrire le nom, nb de secondes et date dans le CSV
-
-
-    def ajouterAuClassement(self, nom, secondes): 
-        ClassementControler.ecrireScore(self, nom, secondes) 
 
         # Ouvrir le fichier CSV et le trier par le nombre de secondes des joueurs en ordre décroissant 
         data = csv.reader(open('fichierHighScore.csv'),delimiter=',')

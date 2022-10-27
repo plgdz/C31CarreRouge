@@ -4,39 +4,44 @@ from tkinter import ttk
 from tkinter.ttk import *
 from c31Geometry2 import *
 
+import random   #À effacer - tests sur le nb de secondes 
 
-class VueRegisterSession(): 
+
+class VueEnregistrerSession : 
     inputNom= None   # Variable globale 
+    secondes = None 
 
-    def __init__(self, root) :
+    def __init__(self, root, fncEcrireScore) :
         self.root = root
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
 
-        #Configurer le titre 
+        #Configurer le titre de la fenêtre 
         self.titre = tk.Label(root, text="Enregistrer la session?")
         self.titre.config(font =("Lucida Console", 22), background="lightgrey", foreground="red")
 
         #Configurer les boutons oui et non 
-        self.buttonOui = tk.Button(root, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root)])
+        self.buttonOui = tk.Button(root, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root, fncEcrireScore)])
         self.buttonNon = tk.Button(root, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5)
-        
 
-    def afficherInputNom(self, root):
+    def afficherInputNom(self, root, fncEcrireScore):
         #Si le joueur appuie sur "oui", afficher option pour input du nom
         self.prenom = tk.Label(root, text="Entrez votre prénom : ")
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
         self.textBox=tk.Text(height=1, width=20)
-        self.textBox.bind('<KeyPress-Return>', partial(self.retrieveInput))   # ------- Ajouter la fonction pour rediriger vers le classemebnt  --------- #
+        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, secondes)])) 
 
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
         
 
-    def retrieveInput(self, root):
+    def retrieveInput(event, textBox):
         #Obtenir la valeur de l'entrée du nom du joueur 
-        inputNom=self.textBox.get("1.0","end-1c")  
-        print(inputNom)
+        global secondes   # ------- Ajouter le tableau de x fois le nombre de secondes du joueur ----- 
+        global inputNom
+        secondes = random.uniform(0, 400) 
+        inputNom=textBox.get("1.0","end-1c")   
+
 
     def dessinerRegisterSession(self, root) :
         self.canvas.pack()

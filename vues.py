@@ -5,6 +5,7 @@ from functools import partial
 from tkinter import Canvas, ttk
 from tkinter.ttk import *
 from c31Geometry2 import *
+import threading
 
 
 class VueMenu() :
@@ -185,13 +186,13 @@ class VueRectangles :
 
         #Choix difficultee
         if(self.difficulte == 0):
-            self.vitesse = 1
+            self.vitesse = 0.2
         elif(self.difficulte == 1):
-            self.vitesse = 3
+            self.vitesse = 0.4
         elif(self.difficulte == 2):
-            self.vitesse = 5
+            self.vitesse = 0.6
         elif(self.difficulte == 3):
-            self.vitesse = 1
+            self.vitesse = 0.2
 
         #Creation des rectangles, de la vitesse et de la direction initiale
         self.rectangleBleuSupDroit = Rectangle(self.canvas, Vecteur(425, 210), 60, 50, remplissage= 'blue', bordure= 'black', epaisseur= 1) 
@@ -199,7 +200,7 @@ class VueRectangles :
         self.y1 = self.vitesse
 
         self.rectangleBleuGauche = Rectangle(self.canvas, Vecteur(225, 225), 60, 60,  remplissage= 'blue', bordure= 'black', epaisseur= 1)
-        self.x2 = self.vitesse + 0.25
+        self.x2 = self.vitesse + 0.01
         self.y2 = self.vitesse
         
         self.rectangleBleuInfDroit = Rectangle(self.canvas, Vecteur(480, 465), 100, 20, remplissage= 'blue', bordure= 'black', epaisseur= 1)

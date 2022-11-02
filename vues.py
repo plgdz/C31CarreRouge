@@ -344,6 +344,8 @@ class VueJeu :
         self.difficulte = difficulte
         self.carreRougeClicked = False
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+        #affichage de la zone tu timer
+        self.labelTimer()
         #Carré noir en arrière plan correspondant à la bordure du jeu 
         self.carreBackground = Carre(self.canvas, Vecteur(350, 350), 450, 0, remplissage="black", bordure="black", epaisseur=0)
         #Aire de jeu blanc où il est possible de déplacer le carré rouge 
@@ -354,6 +356,7 @@ class VueJeu :
         while(self.carreRougeClicked == False):
             self.carreRougeClicked = True # Donnee retournee du controlleur du carre
             self.rect = VueRectangles(root, self.difficulte, self.canvas, self.carreRougeClicked)
+            self.timer()
 
         self.dessiner()
         
@@ -364,6 +367,33 @@ class VueJeu :
 
     def setDifficulte(self, difficulte):
         self.difficulte = difficulte
+
+    def timer(self) :
+        self.min = self.sec = self.ms = 0
+
+        if self.carreRougeClicked : # simule le déclenchement au click sur le carre rouge
+            self.update()
+        
+    def update(self): 
+        self.ms += 10
+        if self.ms == 1000:
+            self.sec += 1
+            self.ms = 0
+        if self.sec == 60:
+            self.min += 1
+            self.sec = 0
+
+        # Tranforme les compteurs en string en ajustant le format pour éviter les decalages aux changement de dizaines/centaines
+        minutes = f'{self.min}' if self.min > 9 else f'0{self.min}' 
+        secondes = f'{self.sec}' if self.sec > 9 else f'0{self.sec}'
+        milliSec = f'{self.ms}' if self.ms > 99 else f'0{self.ms}'    
+        
+        self.label.config(text=f'{minutes}' + ':' + f'{secondes}' + ':' + f'{milliSec}')
+        self.label.after(10, self.update)   # Recursivité pour mise a jour du timer
+
+    def labelTimer(self) :
+        self.label = tk.Label(self.root, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
+        self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
 class VueEnregistrerSession : 
     inputNom= None   # Variable globale 

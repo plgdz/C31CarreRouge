@@ -358,6 +358,35 @@ class VueJeu :
         self.difficulte = difficulte
 
 
+class VuePartiePerdue: 
+    def __init__(self, root, secondes) :
+        self.root = root
+        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+
+        #Configurer le titre de la fenêtre 
+        self.titre = tk.Label(root, text="Perdu")
+        self.titre.config(font =("Lucida Console", 40), background="lightgrey", foreground="red")
+
+        #Configurer affichage score du joueur  
+        secondes = 0 
+        self.score = tk.Label(root, text="Votre score: " + str(secondes) + " secondes") 
+        self.score.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
+
+        #Configurer bouton recommencer partie 
+        self.buttonRecommencer = tk.Button(root, text="Recommencer la partie", width=20, height=1, background="Black", foreground="white", borderwidth=5)
+        self.buttonQuitter = tk.Button(root, text="Quitter la session", width=20, height=1, background="Black", foreground="white", borderwidth=5)
+
+
+    def dessinerPartiePerdue(self, root) :
+        #Afficher tous les widgets configurés 
+        self.canvas.pack()
+        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
+        self.score.place(anchor=tk.CENTER, relx = .48, rely = .5)
+        self.buttonRecommencer.place(anchor=tk.CENTER, relx = .5, rely = 0.7)
+        self.buttonQuitter.place(anchor=tk.CENTER, relx = .5, rely = 0.8)
+
+
+
 class VueEnregistrerSession : 
     inputNom= None   # Variable globale 
     secondes = 0 

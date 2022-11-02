@@ -159,7 +159,7 @@ class VueClassement :
     def afficherDonnees(self, tree): 
         #Afficher les données du CSV dans le widget Treeview
         tree.delete(*tree.get_children()) #Si données déjà présentes dans TreeView, les supprimer pour un refresh 
-        with open('fichierHighScore.csv') as fichiercsv: 
+        with open('fichierHighScore.csv', 'a+') as fichiercsv: 
             i = 0 
             reader = csv.reader(fichiercsv)
             for row in reader:

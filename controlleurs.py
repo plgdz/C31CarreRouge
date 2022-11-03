@@ -2,7 +2,7 @@ from asyncio.windows_events import NULL
 import csv
 import os  
 from datetime import datetime
-from vues import VueClassement, VueMenu, VueJeu, VueEnregistrerSession
+from vues import VueClassement, VueMenu, VueJeu, VueEnregistrerSession, VueCarreRouge
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -79,6 +79,31 @@ class ClassementControler:
         # Remplacer le fichier csv existant par le nouveau avec la ligne supprimée  
         os.replace(tmp_file.name, filepath)
 
+class ControlleurCarreRouge :
+
+    def __init__(self):
+        self.vues = VueCarreRouge(
+            self.root, self.canvas, self.carreRouge
+        )
+    def left(self,e):
+        x = -10
+        y = 0
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def right(self,e):
+        x = 10
+        y = 0
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def up(self,e):
+        x = 0
+        y = -10
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def down(self,e):
+        x = 0
+        y = 10
+        self.vues.canvas.move(self.carreRouge, x, y)
 
 # if __name__ == "__main__" :
 #     root = tk.Tk()

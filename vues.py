@@ -173,7 +173,17 @@ class VueClassement :
 
     def getRow(event, tree, self):  
         global index
-        index = (tree.index(tree.selection())) 
+        index = (tree.index(tree.selection()))
+
+class VueCarreRouge():
+    def __init__(self, root) :
+        self.root = root
+        self.canvas = tk.Canvas(root, background='white', width= 450, height= 450)
+        self.carreRouge = Carre(self.canvas, Vecteur(225, 225), 40, fill= 'red', outline= 'red', width= 1)
+
+    def dessiner(self) :
+        self.carreRouge.draw()
+        self.canvas.grid()
 
 class VueRectangles :
     def __init__(self, root, difficulte, canvas, carreRougeClicked) :

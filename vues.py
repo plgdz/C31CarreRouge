@@ -160,7 +160,7 @@ class VueClassement :
     def afficherDonnees(self, tree): 
         #Afficher les données du CSV dans le widget Treeview
         tree.delete(*tree.get_children()) #Si données déjà présentes dans TreeView, les supprimer pour un refresh 
-        with open('fichierHighScore.csv') as fichiercsv: 
+        with open('fichierHighScore.csv', 'a+') as fichiercsv: 
             i = 0 
             reader = csv.reader(fichiercsv)
             for row in reader:
@@ -369,7 +369,6 @@ class VueJeu :
         self.difficulte = difficulte
 
     def timer(self) :
-        self.score = ""
         self.min = self.sec = self.ms = 0
 
         if self.carreRougeClicked : # simule le déclenchement au click sur le carre rouge
@@ -389,16 +388,40 @@ class VueJeu :
         secondes = f'{self.sec}' if self.sec > 9 else f'0{self.sec}'
         milliSec = f'{self.ms}' if self.ms > 99 else f'0{self.ms}'    
         
-        self.score = f'{minutes}' + ':' + f'{secondes}' + ':' + f'{milliSec}'
-        self.label.config(text=self.score)
+        self.label.config(text=f'{minutes}' + ':' + f'{secondes}' + ':' + f'{milliSec}')
         self.label.after(10, self.update)   # Recursivité pour mise a jour du timer
 
     def labelTimer(self) :
-        self.label = tk.Label(self.root, text = '00:00:00', height=2, width=10, background="lightgrey", borderwidth=2, relief="ridge", font=("Lucida Console", 19)) # Creation de l'affichage
+        self.label = tk.Label(self.root, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
         self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
-    def getScore(self) :
-        return self.score
+        
+class VuePartiePerdue: 
+
+    def __init__(self, root, secondes) :
+        self.root = root
+        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
+
+        #Configurer le titre de la fenêtre 
+        self.titre = tk.Label(root, text="Perdu")
+        self.titre.config(font =("Lucida Console", 40), background="lightgrey", foreground="red")
+
+        #Configurer affichage score du joueur  
+        secondes = 5
+        self.score = tk.Label(root, text="Votre score: " + str(secondes) + " secondes") 
+        self.score.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
+
+        #Configurer bouton recommencer partie 
+        self.buttonRecommencer = tk.Button(root, text="Recommencer la partie", width=20, height=1, background="Black", foreground="white", borderwidth=5)
+        self.buttonQuitter = tk.Button(root, text="Quitter la session", width=20, height=1, background="Black", foreground="white", borderwidth=5)
+
+
+    def dessinerPartiePerdue(self, root) :
+        self.canvas.pack()
+        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
+        self.score.place(anchor=tk.CENTER, relx = .48, rely = .5)
+        self.buttonRecommencer.place(anchor=tk.CENTER, relx = .5, rely = 0.7)
+        self.buttonQuitter.place(anchor=tk.CENTER, relx = .5, rely = 0.8)
 
 class VueEnregistrerSession : 
     inputNom= None   # Variable globale 
@@ -409,18 +432,16 @@ class VueEnregistrerSession :
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
 
         #Configurer le titre de la fenêtre 
-        self.titre = tk.Label(self.canvas, text="Enregistrer la session?")
+        self.titre = tk.Label(root, text="Enregistrer la session?")
         self.titre.config(font =("Lucida Console", 22), background="lightgrey", foreground="red")
 
         #Configurer les boutons oui et non 
-        self.buttonOui = tk.Button(self.canvas, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root, fncEcrireScore)])
-        self.buttonNon = tk.Button(self.canvas, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5, command=self.canvas.destroy)
-
-        self.dessinerRegisterSession()
+        self.buttonOui = tk.Button(root, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root, fncEcrireScore)])
+        self.buttonNon = tk.Button(root, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5)
 
     def afficherInputNom(self, root, fncEcrireScore):
         #Si le joueur appuie sur "oui", afficher option pour input du nom
-        self.prenom = tk.Label(self.canvas, text="Entrez votre prénom : ")
+        self.prenom = tk.Label(root, text="Entrez votre prénom : ")
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
         self.textBox=tk.Text(height=1, width=20)
@@ -429,17 +450,14 @@ class VueEnregistrerSession :
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
         
-
     def retrieveInput(event, textBox):
         #Obtenir la valeur de l'entrée du nom du joueur 
         global secondes   
         global inputNom
         inputNom=textBox.get("1.0","end-1c")   
 
-
-    def dessinerRegisterSession(self) :
-        self.canvas.grid(column=0, row=0)
+    def dessinerRegisterSession(self, root) :
+        self.canvas.pack()
         self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
         self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.5)
         self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.5)
-

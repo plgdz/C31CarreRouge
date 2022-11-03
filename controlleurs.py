@@ -38,7 +38,7 @@ class ClassementControler:
         return self.vues.canvas   
    
     def ajouterAuClassement(self, nom, secondes): 
-        #secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
+        secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
         date = datetime.today().strftime('%Y-%m-%d')        # Enregistrer la date du jour 
         with open('fichierHighScore.csv', 'a', newline="") as csv_file:  #Ouvrir le fichier en "append" pour ajouter donnée
             writer = csv.writer(csv_file, delimiter=',')              

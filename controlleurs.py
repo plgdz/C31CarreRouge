@@ -6,12 +6,7 @@ from vues import VueClassement, VueJeu, VueEnregistrerSession
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from functools import partial
-
-
-# class JeuControler :
-#     def __init__(self, root, difficulte) :
-#         self.vues = VueJeu(root, difficulte)   
+from functools import partial   
 
 class MenuControler :
     def __init__(self, root):  
@@ -35,7 +30,7 @@ class MenuControler :
         quit.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
 
     def retour(self, frame):
-        retour = tk.Button(frame, text='Retour', command=partial(self.retourMain, frame))             # Creation du bouton
+        retour = tk.Button(frame, text='Retour', command=partial(self.retourMain, frame))   # Creation du bouton
         retour.place(relx=0.1, rely=0.1, anchor=tk.CENTER)    # Placement en bas au centre du frame
         retour.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
 
@@ -74,7 +69,6 @@ class MenuControler :
         self.menuClassement = ClassementControler(self.root).__getMenuClassement__()
         self.retour(self.menuClassement)
         self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
-        # self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
 
     def menuMain(self, root):
         menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal

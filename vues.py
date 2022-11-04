@@ -7,13 +7,11 @@ from tkinter.ttk import *
 from c31Geometry2 import *
 import threading
 
-
+total = 0
 class VueMenu() :
-    def __init__(self, root, classement):
-        # initialise la difficulte a progressive
-        
+    def __init__(self, root, classement, funcAdd):  
         # Assigne les template de menu a leurs frames
-        
+        self.reg = VueEnregistrerSession(root, funcAdd)      
         self.menuClassement = classement
         self.retour(self.menuClassement)
         self.menuDiff = self.menuNiveaux(root)
@@ -22,7 +20,7 @@ class VueMenu() :
         self.menu.grid(column=0, row=0)
         self.menuDiff.grid(column=0, row=0)
         self.menuClassement.grid(column=0, row=0)
-          
+                       
     # Titre commun au deux menu
     def titre(self, frame):
         titre = tk.Label(frame, text = "Jeu du carre rouge", height=10, width=20, bg='red') # Creation du titre
@@ -69,8 +67,12 @@ class VueMenu() :
 
     def showClassement(self):
         self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
-        self.menuClassement.tkraise()               # Pousse le frame classement au premier plan
-    
+        self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
+
+    def showReg(self) :
+        self.reg.canvas.grid(column=0, row=0)
+        self.reg.canvas.tkraise()
+
     def menuMain(self, root):
         menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal
 
@@ -90,8 +92,9 @@ class VueMenu() :
 
     # Methode pour definir le niveau de difficulte de la partie choisi dans le menu
     def setDiff(self, root, difficulte):
+        self.menuDiff.grid_forget()
         self.jeu = VueJeu(root, difficulte)
-
+             
     # Methode pour transmettre le niveau de difficulte choisi au controlleur dans le main
     def getDiff(self):
         return self.difficulte  
@@ -350,16 +353,19 @@ class VueJeu :
         self.carreBackground = Carre(self.canvas, Vecteur(350, 350), 450, 0, remplissage="black", bordure="black", epaisseur=0)
         #Aire de jeu blanc où il est possible de déplacer le carré rouge 
         self.carreAireJeu = Carre(self.canvas, Vecteur(350, 350), 400, 0, remplissage="white", bordure="black", epaisseur=0)
-
-        self.dessiner()
-
-        while(self.carreRougeClicked == False):
-            self.carreRougeClicked = True # Donnee retournee du controlleur du carre
-            self.rect = VueRectangles(root, self.difficulte, self.canvas, self.carreRougeClicked)
-            self.timer()
-
-        self.dessiner()
+        self.buttonLaunch = tk.Button(self.canvas, text="Start / Stop", width=12, height=1, background="Green", foreground="white", borderwidth=2, command=self.startAndStop)
+        self.buttonLaunch.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
         
+        self.dessiner()      
+        
+    def startAndStop(self) :
+        if self.carreRougeClicked == False:
+            self.carreRougeClicked = True
+            self.rect = VueRectangles(self.canvas, self.difficulte, self.canvas, self.carreRougeClicked)
+            self.timer()
+        else :
+            self.canvas.grid_forget()
+
     def dessiner(self) :   
         self.carreBackground.draw()
         self.carreAireJeu.draw()
@@ -369,14 +375,15 @@ class VueJeu :
         self.difficulte = difficulte
 
     def timer(self) :
-        self.score = ""
-        self.min = self.sec = self.ms = 0
+        self.min = self.sec = self.ms = self.total = 0
 
         if self.carreRougeClicked : # simule le déclenchement au click sur le carre rouge
             self.update()
         
     def update(self): 
         self.ms += 10
+        global total
+        total += 10
         if self.ms == 1000:
             self.sec += 1
             self.ms = 0
@@ -388,13 +395,13 @@ class VueJeu :
         minutes = f'{self.min}' if self.min > 9 else f'0{self.min}' 
         secondes = f'{self.sec}' if self.sec > 9 else f'0{self.sec}'
         milliSec = f'{self.ms}' if self.ms > 99 else f'0{self.ms}'    
-        
+               
         self.score = f'{minutes}' + ':' + f'{secondes}' + ':' + f'{milliSec}'
         self.label.config(text=self.score)
         self.label.after(10, self.update)   # Recursivité pour mise a jour du timer
 
     def labelTimer(self) :
-        self.label = tk.Label(self.root, text = '00:00:00', height=2, width=10, background="lightgrey", borderwidth=2, relief="ridge", font=("Lucida Console", 19)) # Creation de l'affichage
+        self.label = tk.Label(self.canvas, text = '00:00:00', height=2, width=10, background="lightgrey", borderwidth=2, relief="ridge", font=("Lucida Console", 19)) # Creation de l'affichage
         self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
     def getScore(self) :
@@ -416,7 +423,11 @@ class VueEnregistrerSession :
         self.buttonOui = tk.Button(self.canvas, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root, fncEcrireScore)])
         self.buttonNon = tk.Button(self.canvas, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5, command=self.canvas.destroy)
 
-        self.dessinerRegisterSession()
+        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
+        self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.5)
+        self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.5)
+
+        self.canvas.grid(column=0, row=0)
 
     def afficherInputNom(self, root, fncEcrireScore):
         #Si le joueur appuie sur "oui", afficher option pour input du nom
@@ -424,7 +435,7 @@ class VueEnregistrerSession :
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
         self.textBox=tk.Text(height=1, width=20)
-        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, secondes)])) 
+        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total)])) 
 
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
@@ -435,11 +446,3 @@ class VueEnregistrerSession :
         global secondes   
         global inputNom
         inputNom=textBox.get("1.0","end-1c")   
-
-
-    def dessinerRegisterSession(self) :
-        self.canvas.grid(column=0, row=0)
-        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
-        self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.5)
-        self.buttonNon.place(anchor=tk.CENTER, relx = .6, rely = 0.5)
-

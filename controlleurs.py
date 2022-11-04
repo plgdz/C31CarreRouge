@@ -2,33 +2,32 @@ from asyncio.windows_events import NULL
 import csv
 import os  
 from datetime import datetime
-from vues import VueClassement, VueMenu, VueJeu, VueEnregistrerSession
+from vues import VueClassement, VueMenu, VueEnregistrerSession
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 
-class JeuControler :
-    def __init__(self, root, difficulte) :
-        self.vues = VueJeu(root, difficulte)   
+# class JeuControler :
+#     def __init__(self, root, difficulte) :
+#         self.vues = VueJeu(root, difficulte)   
 
 class MenuControler :
     def __init__(self, root):  
         self.difficulte = -1
         classement = ClassementControler(root)
         
-        self.jeu = tk.Frame(root, height=700, width=700)
         self.menu = tk.Frame(root, width=700, height=700)
-        self.vueMenu = VueMenu(self.menu, classement.__getMenuClassement__())
+        self.vueMenu = VueMenu(self.menu, classement.__getMenuClassement__(),ClassementControler.ajouterAuClassement)
 
         self.menu.grid(column=0, row=0)
         
 class RegisterSessionControler:
-    def __init__(self, root, vues) :
+    def __init__(self, root) :
         self.vues = VueEnregistrerSession(root, ClassementControler.ajouterAuClassement)
 
-    def start(self, root) :
-        self.vues.dessinerRegisterSession(root)
+    def getRegisterSession(self) :
+        return self.vues.canvas
 
 class ClassementControler:
     def __init__(self, root) :

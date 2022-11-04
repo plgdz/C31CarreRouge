@@ -410,7 +410,7 @@ class VueJeu :
         self.label.after(10, self.update)   # Recursivité pour mise a jour du timer
 
     def labelTimer(self) :
-        self.label = tk.Label(self.root, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
+        self.label = tk.Label(self.canvas, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
         self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
         

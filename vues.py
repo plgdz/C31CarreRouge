@@ -275,6 +275,7 @@ class VueJeu :
     def startAndStop(self) :
         if self.carreRougeClicked == False:
             self.carreRougeClicked = True
+            self.buttonLaunch.config(background="red")
             self.rect = VueRectangles(self.canvas, self.difficulte, self.canvas, self.carreRougeClicked)
             self.timer()
         else :

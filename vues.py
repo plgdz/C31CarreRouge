@@ -321,27 +321,6 @@ class VueJeu :
         self.label = tk.Label(self.canvas, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
         self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
-        
-class VuePartiePerdue: 
-
-    def __init__(self, root, secondes) :
-        self.root = root
-        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
-
-        #Configurer le titre de la fenêtre 
-        self.titre = tk.Label(root, text="Perdu")
-        self.titre.config(font =("Lucida Console", 40), background="lightgrey", foreground="red")
-
-        #Configurer affichage score du joueur  
-        secondes = 5
-        self.score = tk.Label(root, text="Votre score: " + str(secondes) + " secondes") 
-        self.score.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
-
-        #Configurer bouton recommencer partie 
-        self.buttonRecommencer = tk.Button(root, text="Recommencer la partie", width=20, height=1, background="Black", foreground="white", borderwidth=5)
-        self.buttonQuitter = tk.Button(root, text="Quitter la session", width=20, height=1, background="Black", foreground="white", borderwidth=5)
-
-
     def dessinerPartiePerdue(self, root) :
         self.canvas.pack()
         self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)

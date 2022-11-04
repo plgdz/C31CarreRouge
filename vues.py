@@ -377,7 +377,7 @@ class VueEnregistrerSession :
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
         self.textBox=tk.Text(self.canvas, height=1, width=20)
-        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total)])) 
+        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total), self.destroy()])) 
 
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)
@@ -386,4 +386,5 @@ class VueEnregistrerSession :
         #Obtenir la valeur de l'entrée du nom du joueur 
         global secondes   
         global inputNom
-        inputNom=textBox.get("1.0","end-1c")         
+        inputNom=textBox.get("1.0","end-1c")
+      

@@ -85,14 +85,12 @@ class VueClassement :
         
 
 class VueCarreRouge():
-    def __init__(self, root) :
-        self.root = root
-        self.canvas = tk.Canvas(root, background='white', width= 450, height= 450)
-        self.carreRouge = Carre(self.canvas, Vecteur(225, 225), 40, fill= 'red', outline= 'red', width= 1)
+    def __init__(self, canvas) :
+        self.canvas = canvas
+        self.carreRouge = Carre(self.canvas, Vecteur(225, 225), 40, remplissage= 'red', bordure= 'red', epaisseur= 1)
 
     def dessiner(self) :
         self.carreRouge.draw()
-        self.canvas.grid()
 
 class VueRectangles :
     def __init__(self, root, difficulte, canvas, carreRougeClicked) :

@@ -2,7 +2,7 @@ from asyncio.windows_events import NULL
 import csv
 import os  
 from datetime import datetime
-from vues import VueClassement, VueJeu, VueEnregistrerSession
+from vues import VueClassement, VueJeu, VueEnregistrerSession, VueCarreRouge
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -157,27 +157,34 @@ class ClassementControler:
         os.replace(tmp_file.name, filepath)
 
 class ControlleurCarreRouge :
+    class ControlleurCarreRouge:
 
-    def __init__(self):
-        self.vues = VueCarreRouge(
-            self.root, self.canvas, self.carreRouge
-        )
-    def left(self,e):
-        x = -10
-        y = 0
-        self.vues.canvas.move(self.carreRouge, x, y)
+        def __init__(self):
+            self.vues = VueCarreRouge(
+                self.root, self.canvas, self.carreRouge
+            )
+            self.canvas.bind("<Left>", self.left)
+            self.canvas.bind("<Right>", self.right)
+            self.canvas.bind("<Up>", self.up)
+            self.canvas.bind("<Down>", self.down)
 
-    def right(self,e):
-        x = 10
-        y = 0
-        self.vues.canvas.move(self.carreRouge, x, y)
+        def left(self, e):
+            x = -10
+            y = 0
+            self.vues.canvas.move(self.carreRouge, x, y)
 
-    def up(self,e):
-        x = 0
-        y = -10
-        self.vues.canvas.move(self.carreRouge, x, y)
+        def right(self, e):
+            x = 10
+            y = 0
+            self.vues.canvas.move(self.carreRouge, x, y)
 
-    def down(self,e):
-        x = 0
-        y = 10
-        self.vues.canvas.move(self.carreRouge, x, y)
+        def up(self, e):
+            x = 0
+            y = -10
+            self.vues.canvas.move(self.carreRouge, x, y)
+
+        def down(self, e):
+            x = 0
+            y = 10
+            self.vues.canvas.move(self.carreRouge, x, y)
+

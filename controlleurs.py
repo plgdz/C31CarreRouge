@@ -2,10 +2,11 @@ from asyncio.windows_events import NULL
 import csv
 import os  
 from datetime import datetime
-from vues import VueClassement, VueMenu, VueEnregistrerSession
+from vues import VueClassement, VueJeu, VueEnregistrerSession
 import tkinter as tk
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from functools import partial
 
 
 # class JeuControler :
@@ -14,13 +15,99 @@ from tempfile import NamedTemporaryFile
 
 class MenuControler :
     def __init__(self, root):  
-        self.difficulte = -1
-        classement = ClassementControler(root)
-        
-        self.menu = tk.Frame(root, width=700, height=700)
-        self.vueMenu = VueMenu(self.menu, classement.__getMenuClassement__(),ClassementControler.ajouterAuClassement)
+        # Assigne les template de menu a leurs frames
+        self.reg = VueEnregistrerSession(root, ClassementControler.ajouterAuClassement, self.menuMain(root))   
+        self.menuClassement = ClassementControler(root).__getMenuClassement__()
+        self.retour(self.menuClassement)
+        self.menuDiff = self.menuNiveaux(root)
+        self.menu = self.menuMain(root) 
 
         self.menu.grid(column=0, row=0)
+                        
+    # Titre commun au deux menu
+    def titre(self, frame):
+        titre = tk.Label(frame, text = "Jeu du carre rouge", height=10, width=20, bg='red') # Creation du titre
+        titre.place(relx=0.5, rely=0.15, anchor=tk.CENTER)  # placement dans le frame
+
+    # Bouton Quitter commun au deux menu
+    def quit(self, frame, root):
+        quit = tk.Button(frame, text='Quitter', command=root.quit)             # Creation du bouton
+        quit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)    # Placement en bas au centre du frame
+        quit.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
+
+    def retour(self, frame):
+        retour = tk.Button(frame, text='Retour', command=partial(self.retourMain, frame))             # Creation du bouton
+        retour.place(relx=0.1, rely=0.1, anchor=tk.CENTER)    # Placement en bas au centre du frame
+        retour.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
+
+    def retourMain(self, frame):
+        frame.grid_forget() # Permet de masquer le frame pour revenir au menu principal
+        self.menu.grid(column=0, row=0)
+
+    def menuNiveaux(self, root):
+        menuNiveaux = tk.Frame(root, width=700, height=700) # Definition du frame
+
+        self.titre(menuNiveaux) # Appel de la methode titre
+
+        # Definition des boutons de choix de niveau
+        facile = tk.Button(menuNiveaux, text='Facile', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff,root, 0))
+        moyen = tk.Button(menuNiveaux, text='Moyen', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff,root, 1))
+        difficile = tk.Button(menuNiveaux, text='Difficile', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff, root, 2))
+        progressif = tk.Button(menuNiveaux, text='Progressif', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff, root, 3))
+        # Placement des boutons les uns a cotes des autres
+        facile.place(relx=0.1, rely=0.4)
+        moyen.place(relx=0.3, rely=0.4)
+        difficile.place(relx=0.5, rely=0.4)
+        progressif.place(relx=0.7, rely=0.4)
+        self.retour(menuNiveaux)
+        self.quit(menuNiveaux, root)  # Affichage du boutons quit
+
+        return menuNiveaux  # Retourne le frame du menu de choix de niveau
+    
+    # Methode pour afficher le menu de choix de niveau un fois le "Lancer une partie" active
+    def choixNiveaux(self):
+        self.menu.grid_forget()
+        self.menuDiff.grid(column=0, row=0) # Replace le frame menu de niveau dans root
+        self.menuDiff.tkraise()             # Pousse le frame menu niveau au premier plan
+
+    def showClassement(self):
+        self.menu.grid_forget()
+        self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
+        self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
+
+    def menuMain(self, root):
+        menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal
+
+        self.titre(menuMain) # Appel de la methode titre
+
+        partie = tk.Button(menuMain, text='Lancer une partie', command=self.choixNiveaux)   # Creation du bouton
+        partie.place(relx=0.5, rely=0.4, anchor = tk.CENTER)                                # Placement sur axe x et y
+        partie.config(height=3, width= 15, relief=tk.GROOVE)                                # Définition de l'apparence
+
+        score = tk.Button(menuMain, text='Tableau des scores', command=self.showClassement)      # Creation du bouton
+        score.place(relx=0.5, rely=0.55, anchor = tk.CENTER)        # Placement sur axe x et y
+        score.config(height=3, width= 15, relief=tk.GROOVE)         # Définition de l'apparence
+
+        self.quit(menuMain, root)     # Appel de l'affichage du bouton quitter
+
+        return menuMain # Retourn le frame du menu principal
+
+    # Methode pour definir le niveau de difficulte de la partie choisi dans le menu
+    def setDiff(self, root, difficulte):
+        self.menuDiff.grid_forget()
+        self.reg.canvas.grid(column=0, row=0)
+        self.jeu = VueJeu(root, difficulte)
+        
+             
+    # Methode pour transmettre le niveau de difficulte choisi au controlleur dans le main
+    def getDiff(self):
+        return self.difficulte  
+
+    def __getMenuMain__(self) :
+        return self.menu
+
+    def __getMenuDiff__(self) :
+        return self.menuDiff
         
 class RegisterSessionControler:
     def __init__(self, root) :
@@ -99,12 +186,3 @@ class ControlleurCarreRouge :
         x = 0
         y = 10
         self.vues.canvas.move(self.carreRouge, x, y)
-
-# if __name__ == "__main__" :
-#     root = tk.Tk()
-#     root.title("Jeu du Carré Rouge")  
-#     root.geometry("700x700")  
-
-#     MenuControler(root)
-
-#     root.mainloop()

@@ -8,102 +8,6 @@ from c31Geometry2 import *
 import threading
 
 total = 0
-class VueMenu() :
-    def __init__(self, root, classement, funcAdd):  
-        # Assigne les template de menu a leurs frames
-        self.reg = VueEnregistrerSession(root, funcAdd)      
-        self.menuClassement = classement
-        self.retour(self.menuClassement)
-        self.menuDiff = self.menuNiveaux(root)
-        self.menu = self.menuMain(root) 
-
-        self.menu.grid(column=0, row=0)
-        self.menuDiff.grid(column=0, row=0)
-        self.menuClassement.grid(column=0, row=0)
-                       
-    # Titre commun au deux menu
-    def titre(self, frame):
-        titre = tk.Label(frame, text = "Jeu du carre rouge", height=10, width=20, bg='red') # Creation du titre
-        titre.place(relx=0.5, rely=0.15, anchor=tk.CENTER)  # placement dans le frame
-
-    # Bouton Quitter commun au deux menu
-    def quit(self, frame, root):
-        quit = tk.Button(frame, text='Quitter', command=root.quit)             # Creation du bouton
-        quit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)    # Placement en bas au centre du frame
-        quit.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
-
-    def retour(self, frame):
-        retour = tk.Button(frame, text='Retour', command=partial(self.retourMain, frame))             # Creation du bouton
-        retour.place(relx=0.1, rely=0.1, anchor=tk.CENTER)    # Placement en bas au centre du frame
-        retour.config(height=2, width=8, relief = tk.GROOVE)  # Apparence du bouton
-
-    def retourMain(self, frame):
-        frame.grid_forget() # Permet de masquer le frame pour revenir au menu principal
-
-    def menuNiveaux(self, root):
-        menuNiveaux = tk.Frame(root, width=700, height=700) # Definition du frame
-
-        self.titre(menuNiveaux) # Appel de la methode titre
-
-        # Definition des boutons de choix de niveau
-        facile = tk.Button(menuNiveaux, text='Facile', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff,root, 0))
-        moyen = tk.Button(menuNiveaux, text='Moyen', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff,root, 1))
-        difficile = tk.Button(menuNiveaux, text='Difficile', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff, root, 2))
-        progressif = tk.Button(menuNiveaux, text='Progressif', height=3, width=10, relief=tk.GROOVE, command=partial(self.setDiff, root, 3))
-        # Placement des boutons les uns a cotes des autres
-        facile.place(relx=0.1, rely=0.4)
-        moyen.place(relx=0.3, rely=0.4)
-        difficile.place(relx=0.5, rely=0.4)
-        progressif.place(relx=0.7, rely=0.4)
-        self.retour(menuNiveaux)
-        self.quit(menuNiveaux, root)  # Affichage du boutons quit
-
-        return menuNiveaux  # Retourne le frame du menu de choix de niveau
-    
-    # Methode pour afficher le menu de choix de niveau un fois le "Lancer une partie" active
-    def choixNiveaux(self):
-        self.menuDiff.grid(column=0, row=0) # Replace le frame menu de niveau dans root
-        self.menuDiff.tkraise()             # Pousse le frame menu niveau au premier plan
-
-    def showClassement(self):
-        self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
-        self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
-
-    def showReg(self) :
-        self.reg.canvas.grid(column=0, row=0)
-        self.reg.canvas.tkraise()
-
-    def menuMain(self, root):
-        menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal
-
-        self.titre(menuMain) # Appel de la methode titre
-
-        partie = tk.Button(menuMain, text='Lancer une partie', command=self.choixNiveaux)   # Creation du bouton
-        partie.place(relx=0.5, rely=0.4, anchor = tk.CENTER)                                # Placement sur axe x et y
-        partie.config(height=3, width= 15, relief=tk.GROOVE)                                # Définition de l'apparence
-
-        score = tk.Button(menuMain, text='Tableau des scores', command=self.showClassement)      # Creation du bouton
-        score.place(relx=0.5, rely=0.55, anchor = tk.CENTER)        # Placement sur axe x et y
-        score.config(height=3, width= 15, relief=tk.GROOVE)         # Définition de l'apparence
-
-        self.quit(menuMain, root)     # Appel de l'affichage du bouton quitter
-
-        return menuMain # Retourn le frame du menu principal
-
-    # Methode pour definir le niveau de difficulte de la partie choisi dans le menu
-    def setDiff(self, root, difficulte):
-        self.menuDiff.grid_forget()
-        self.jeu = VueJeu(root, difficulte)
-             
-    # Methode pour transmettre le niveau de difficulte choisi au controlleur dans le main
-    def getDiff(self):
-        return self.difficulte  
-
-    def __getMenuMain__(self) :
-        return self.menu
-
-    def __getMenuDiff__(self) :
-        return self.menuDiff
         
 class VueClassement :   
     index = None   # Variable globale 
@@ -445,17 +349,17 @@ class VueEnregistrerSession :
     inputNom= None   # Variable globale 
     secondes = 0 
 
-    def __init__(self, root, fncEcrireScore) :
+    def __init__(self, root, fncEcrireScore, menuMain) :
         self.root = root
         self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
-
+        self.menu = menuMain
         #Configurer le titre de la fenêtre 
-        self.titre = tk.Label(root, text="Enregistrer la session?")
+        self.titre = tk.Label(self.canvas, text="Enregistrer la session?")
         self.titre.config(font =("Lucida Console", 22), background="lightgrey", foreground="red")
 
         #Configurer les boutons oui et non 
-        self.buttonOui = tk.Button(self.canvas, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(root, fncEcrireScore)])
-        self.buttonNon = tk.Button(self.canvas, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5, command=self.canvas.destroy)
+        self.buttonOui = tk.Button(self.canvas, text="Oui", width=12, height=1, background="Green", foreground="white", borderwidth=5,  command = lambda:[self.afficherInputNom(fncEcrireScore)])
+        self.buttonNon = tk.Button(self.canvas, text="Non", width=12, height=1, background="Red", foreground="white", borderwidth=5, command=self.destroy)
 
         self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
         self.buttonOui.place(anchor=tk.CENTER, relx = .4, rely = 0.5)
@@ -463,12 +367,16 @@ class VueEnregistrerSession :
 
         self.canvas.grid(column=0, row=0)
 
-    def afficherInputNom(self, root, fncEcrireScore):
+    def destroy(self) :
+        self.canvas.grid_forget()
+        self.menu.grid(column=0, row=0)
+
+    def afficherInputNom(self, fncEcrireScore):
         #Si le joueur appuie sur "oui", afficher option pour input du nom
-        self.prenom = tk.Label(root, text="Entrez votre prénom : ")
+        self.prenom = tk.Label(self.canvas, text="Entrez votre prénom : ")
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
-        self.textBox=tk.Text(height=1, width=20)
+        self.textBox=tk.Text(self.canvas, height=1, width=20)
         self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total)])) 
 
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
@@ -478,4 +386,4 @@ class VueEnregistrerSession :
         #Obtenir la valeur de l'entrée du nom du joueur 
         global secondes   
         global inputNom
-        inputNom=textBox.get("1.0","end-1c")   
+        inputNom=textBox.get("1.0","end-1c")         

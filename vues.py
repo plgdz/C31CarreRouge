@@ -9,12 +9,12 @@ import threading
 
 total = 0
         
-class VueClassement :   
+class VueClassement :     
     index = None   # Variable globale 
 
     def __init__(self, root, fncSupprimerScore):
         self.root = root 
-        self.canvas = tk.Frame(root, background="lightgrey", width=700, height=700)
+        self.canvas = tk.Canvas(root, background="lightgrey", width=700, height=700)
         
         #Afficher le titre du classement 
         titre = tk.Label(self.canvas, text="Tableau des scores")
@@ -67,7 +67,7 @@ class VueClassement :
     def afficherDonnees(self, tree): 
         #Afficher les données du CSV dans le widget Treeview
         tree.delete(*tree.get_children()) #Si données déjà présentes dans TreeView, les supprimer pour un refresh 
-        with open('fichierHighScore.csv', 'a+') as fichiercsv: 
+        with open('fichierHighScore.csv') as fichiercsv: 
             i = 0 
             reader = csv.reader(fichiercsv)
             for row in reader:
@@ -76,11 +76,13 @@ class VueClassement :
                 secondes = row[1]
                 date = row[2]
                 tree.insert('', 'end', values=(i, nom, secondes, date))
-
+        fichiercsv.close()
 
     def getRow(event, tree, self):  
         global index
-        index = (tree.index(tree.selection()))
+        index = (tree.index(tree.selection())) 
+
+        
 
 class VueCarreRouge():
     def __init__(self, root) :

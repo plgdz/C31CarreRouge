@@ -15,10 +15,9 @@ from functools import partial
 
 class MenuControler :
     def __init__(self, root):  
+        self.root = root
         # Assigne les template de menu a leurs frames
         self.reg = VueEnregistrerSession(root, ClassementControler.ajouterAuClassement, self.menuMain(root))   
-        self.menuClassement = ClassementControler(root).__getMenuClassement__()
-        self.retour(self.menuClassement)
         self.menuDiff = self.menuNiveaux(root)
         self.menu = self.menuMain(root) 
 
@@ -72,8 +71,10 @@ class MenuControler :
 
     def showClassement(self):
         self.menu.grid_forget()
+        self.menuClassement = ClassementControler(self.root).__getMenuClassement__()
+        self.retour(self.menuClassement)
         self.menuClassement.grid(column=0, row=0)   # Replace le frame classement dans root
-        self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
+        # self.menuClassement.tkraise()              # Pousse le frame classement au premier plan
 
     def menuMain(self, root):
         menuMain = tk.Frame(root, width=700, height=700)    # Définition du frame du menu principal

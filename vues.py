@@ -279,6 +279,8 @@ class VueJeu :
             self.rect = VueRectangles(self.canvas, self.difficulte, self.canvas, self.carreRougeClicked)
             self.timer()
         else :
+            global total
+            total = self.total
             self.canvas.grid_forget()
 
     def dessiner(self) :   
@@ -290,15 +292,14 @@ class VueJeu :
         self.difficulte = difficulte
 
     def timer(self) :
-        self.min = self.sec = self.ms = 0
+        self.min = self.sec = self.ms = self.total = 0
 
         if self.carreRougeClicked : # simule le déclenchement au click sur le carre rouge
             self.update()
         
     def update(self): 
         self.ms += 10
-        global total
-        total += 10
+        self.total += 10
         if self.ms == 1000:
             self.sec += 1
             self.ms = 0
@@ -348,7 +349,6 @@ class VuePartiePerdue:
 
 class VueEnregistrerSession : 
     inputNom= None   # Variable globale 
-    secondes = 0 
 
     def __init__(self, root, fncEcrireScore, menuMain) :
         self.root = root
@@ -378,7 +378,7 @@ class VueEnregistrerSession :
         self.prenom.config(font =("Lucida Console", 15), background="lightgrey", foreground="red")
 
         self.textBox=tk.Text(self.canvas, height=1, width=20)
-        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total), self.destroy()])) 
+        self.textBox.bind('<KeyPress-Return>', partial(lambda x:[self.retrieveInput(self.textBox), fncEcrireScore(self, inputNom, total / 1000), self.destroy()])) 
 
         self.prenom.place(anchor=tk.CENTER, relx = .4, rely = .8)
         self.textBox.place(anchor=tk.CENTER, relx = .7, rely = .8)

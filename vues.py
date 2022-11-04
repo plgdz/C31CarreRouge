@@ -321,13 +321,6 @@ class VueJeu :
         self.label = tk.Label(self.canvas, text = '00:00:00', height=2, width=10, bg='white', font=("Lucida Console", 19)) # Creation de l'affichage
         self.label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)  # placement dans le frame
 
-    def dessinerPartiePerdue(self, root) :
-        self.canvas.pack()
-        self.titre.place(anchor=tk.CENTER, relx = .5, rely = .3)
-        self.score.place(anchor=tk.CENTER, relx = .48, rely = .5)
-        self.buttonRecommencer.place(anchor=tk.CENTER, relx = .5, rely = 0.7)
-        self.buttonQuitter.place(anchor=tk.CENTER, relx = .5, rely = 0.8)
-
 class VueEnregistrerSession : 
     inputNom= None   # Variable globale 
 

@@ -35,17 +35,13 @@ class ClassementControler:
 
     def __getMenuClassement__(self):
         return self.vues.canvas   
-
-    def ecrireScore(self, nom, secondes):   
+   
+    def ajouterAuClassement(self, nom, secondes): 
         secondes = "%.2f" % secondes    #Convertir le nb de secondes (float) en 2 décimales après la virgule  
         date = datetime.today().strftime('%Y-%m-%d')        # Enregistrer la date du jour 
         with open('fichierHighScore.csv', 'a', newline="") as csv_file:  #Ouvrir le fichier en "append" pour ajouter donnée
             writer = csv.writer(csv_file, delimiter=',')              
             writer.writerows(zip([nom], [secondes], [date]))             #Écrire le nom, nb de secondes et date dans le CSV
-
-
-    def ajouterAuClassement(self, nom, secondes): 
-        ClassementControler.ecrireScore(self, nom, secondes) 
 
         # Ouvrir le fichier CSV et le trier par le nombre de secondes des joueurs en ordre décroissant 
         data = csv.reader(open('fichierHighScore.csv'),delimiter=',')
@@ -55,7 +51,7 @@ class ClassementControler:
         sorted_csv_file = open('fichierHighScore.csv', 'w+', newline='') 
         write = csv.writer(sorted_csv_file)           
         for eachline in data:
-                write.writerow(eachline)  
+                write.writerow(eachline)   
 
 
     def supprimerScore(self, index):
@@ -78,6 +74,31 @@ class ClassementControler:
         # Remplacer le fichier csv existant par le nouveau avec la ligne supprimée  
         os.replace(tmp_file.name, filepath)
 
+class ControlleurCarreRouge :
+
+    def __init__(self):
+        self.vues = VueCarreRouge(
+            self.root, self.canvas, self.carreRouge
+        )
+    def left(self,e):
+        x = -10
+        y = 0
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def right(self,e):
+        x = 10
+        y = 0
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def up(self,e):
+        x = 0
+        y = -10
+        self.vues.canvas.move(self.carreRouge, x, y)
+
+    def down(self,e):
+        x = 0
+        y = 10
+        self.vues.canvas.move(self.carreRouge, x, y)
 
 # if __name__ == "__main__" :
 #     root = tk.Tk()
